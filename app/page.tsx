@@ -2,6 +2,7 @@ import Image from "next/image";
 import CategoryList from "./_components/category-list";
 import Header from "./_components/header";
 import Search from "./_components/search";
+import ProductLists from "./_components/product-list";
 
 export default function Home() {
   return (
@@ -18,6 +19,9 @@ export default function Home() {
           className="h-auto w-full object-contain"
           sizes="10ovw"
         />
+      </div>
+      <div className="pt-6">
+        <ProductLists />
       </div>
     </>
   );
