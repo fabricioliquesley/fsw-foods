@@ -8,7 +8,7 @@ import { cn } from "../_lib/utils";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
-  className: string
+  className?: string
 }
 
 const RestaurantItem = ({ restaurant, className }: RestaurantItemProps) => {
