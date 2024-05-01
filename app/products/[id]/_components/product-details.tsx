@@ -122,6 +122,11 @@ const ProductDetails = ({
         <h3 className="px-5 font-semibold">Sucos</h3>
         <ProductLists products={complementaryProducts} />
       </div>
+      <div className="px-5 mt-6">
+        <Button className="w-full font-semibold">
+          Adicionar a sacola
+        </Button>
+      </div>
     </div>
   );
 };
