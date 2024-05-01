@@ -68,7 +68,7 @@ const ProductDetails = ({
             {product.discountPercentage && <DiscountBadge product={product} />}
           </div>
           {product.discountPercentage && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground line-through">
               De: {formatCurrency(Number(product.price))}
             </p>
           )}
