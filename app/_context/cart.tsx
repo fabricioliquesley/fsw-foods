@@ -22,7 +22,15 @@ interface ICartContext {
   subtotal: number;
   totalPrice: number;
   totalDiscounts: number;
-  addProductToCart: (product: CartProduct, quantity: number) => void;
+  addProductToCart: ({
+    product,
+    quantity,
+    emptyCart,
+  }: {
+    product: CartProduct;
+    quantity: number;
+    emptyCart?: boolean;
+  }) => void;
   decreaseCartProductQuantity: (productId: string) => void;
   increaseCartProductQuantity: (productId: string) => void;
   removerProductFromCart: (productId: string) => void;
@@ -48,13 +56,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, 0);
   }, [products]);
 
-  const totalPrice = useMemo(() => {
-    return products.reduce((acc, product) => {
-      return acc + calculateProductTotalPrice(product) * product.quantity;
-    }, 0);
-  }, [products]);
+  const totalPrice =
+    useMemo(() => {
+      return products.reduce((acc, product) => {
+        return acc + calculateProductTotalPrice(product) * product.quantity;
+      }, 0);
+    }, [products]) + Number(products?.[0]?.restaurant?.deliveryFee);
 
-  const totalDiscounts = subtotal - totalPrice;
+  const totalDiscounts = (subtotal - totalPrice) + Number(products?.[0]?.restaurant?.deliveryFee);
 
   const decreaseCartProductQuantity = (productId: string) => {
     return setProducts((prev) =>
@@ -90,7 +99,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const addProductToCart = (product: CartProduct, quantity: number) => {
+  const addProductToCart = ({
+    product,
+    quantity,
+  }: {
+    product: CartProduct;
+    quantity: number;
+    emptyCart?: boolean;
+  }) => {
+    const hasDifferentRestaurantProduct = products.some(
+      (cartProduct) => cartProduct.restaurantId !== product.restaurantId,
+    );
+
+    if (hasDifferentRestaurantProduct) {
+      setProducts([]);
+    }
+
     const isProductsAlreadyOnCart = products.some(
       (cartProduct) => cartProduct.id === product.id,
     );
