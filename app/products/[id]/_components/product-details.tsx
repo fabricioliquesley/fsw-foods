@@ -161,28 +161,28 @@ const ProductDetails = ({
           </SheetHeader>
           <Cart />
         </SheetContent>
-        <AlertDialog
-          open={isConfirmationDialogOpen}
-          onOpenChange={setIsConfirmationDialogOpen}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Voce so pode adicionar itens de um restaurante por vez
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Deseja esvaziar a sacola e adicionar este item?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
-                Confirmar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </Sheet>
+      <AlertDialog
+        open={isConfirmationDialogOpen}
+        onOpenChange={setIsConfirmationDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Voce so pode adicionar itens de um restaurante por vez
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja esvaziar a sacola e adicionar este item?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
