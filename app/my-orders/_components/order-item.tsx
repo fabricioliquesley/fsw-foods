@@ -4,11 +4,14 @@ import { Avatar, AvatarImage } from "@/app/_components/ui/avatar";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent } from "@/app/_components/ui/card";
 import { Separator } from "@/app/_components/ui/separator";
+import { CartContext } from "@/app/_context/cart";
 import { cn } from "@/app/_lib/utils";
 import { formatCurrency } from "@/app/_utils/price";
 import { Prisma } from "@prisma/client";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
 
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
@@ -24,6 +27,9 @@ interface OrderItemProps {
 }
 
 const OrderItem = ({ order }: OrderItemProps) => {
+  const { addProductToCart } = useContext(CartContext);
+  const router = useRouter();
+
   const background =
     order.status != "COMPLETED"
       ? "bg-green-500 text-white"
@@ -48,6 +54,21 @@ const OrderItem = ({ order }: OrderItemProps) => {
       orderStatus = "Finalizado";
       break;
   }
+
+  const handleRedoOrderClick = () => {
+    for (const orderProduct of order.products) {
+      addProductToCart({
+        product: {
+          ...orderProduct.product,
+          restaurant: order.restaurant,
+          quantity: orderProduct.quantity,
+        },
+        quantity: orderProduct.quantity,
+      });
+    }
+
+    router.push(`/restaurant/${order.restaurantId}`);
+  };
 
   return (
     <Card>
@@ -89,6 +110,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
             size={"sm"}
             className="text-xs text-primary"
             disabled={order.status != "COMPLETED"}
+            onClick={handleRedoOrderClick}
           >
             Refazer pedido
           </Button>
