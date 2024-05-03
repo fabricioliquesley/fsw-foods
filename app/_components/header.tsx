@@ -83,9 +83,14 @@ const Header = () => {
                   <Button
                     variant={"ghost"}
                     className="w-full justify-start gap-3 rounded-full text-sm font-normal"
+                    asChild
                   >
-                    <ScrollText size={16} />
-                    <span className="text-sm font-semibold">Meus Pedidos</span>
+                    <Link href={"/my-orders"}>
+                      <ScrollText size={16} />
+                      <span className="text-sm font-semibold">
+                        Meus Pedidos
+                      </span>
+                    </Link>
                   </Button>
                   <Button
                     variant={"ghost"}
@@ -99,7 +104,7 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between mt-6">
+              <div className="mt-6 flex items-center justify-between">
                 <h2 className="font-semibold">Ola, faça login</h2>
                 <Button size={"icon"} onClick={handleSignInClick}>
                   <LogInIcon size={20} />
