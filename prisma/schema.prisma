@@ -31,34 +31,44 @@ model Category {
 }
 
 model Product {
-  id                 String  @id @default(uuid())
+  id                 String         @id @default(uuid())
   name               String
   description        String
   imageUrl           String
-  price              Decimal @db.Decimal(10, 2)
-  discountPercentage Int     @default(0)
+  price              Decimal        @db.Decimal(10, 2)
+  discountPercentage Int            @default(0)
   restaurantId       String
   categoryId         String
+  OrderProducts      OrderProduct[]
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id])
   category   Category   @relation(fields: [categoryId], references: [id])
-  orders     Order[]
 
   @@map("products")
 }
 
+model OrderProduct {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
 model Order {
-  id                  String      @id @default(uuid())
+  id                  String         @id @default(uuid())
   userId              String
-  products            Product[]
+  products            OrderProduct[]
   restaurantId        String
-  deliveryFee         Decimal     @db.Decimal(10, 2)
+  deliveryFee         Decimal        @db.Decimal(10, 2)
   deliveryTimeMinutes Int
-  subtotalPrice       Decimal     @db.Decimal(10, 2)
-  totalPrice          Decimal     @db.Decimal(10, 2)
-  totalDiscount       Decimal     @db.Decimal(10, 2)
+  subtotalPrice       Decimal        @db.Decimal(10, 2)
+  totalPrice          Decimal        @db.Decimal(10, 2)
+  totalDiscount       Decimal        @db.Decimal(10, 2)
   status              OrderStatus
-  createdAt           DateTime    @default(now())
+  createdAt           DateTime       @default(now())
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
