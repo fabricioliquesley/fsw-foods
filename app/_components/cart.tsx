@@ -11,16 +11,25 @@ import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const Cart = () => {
+interface CartProps {
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Cart = ({ setIsOpen }: CartProps) => {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const router = useRouter();
 
   const { data } = useSession();
   const { products, subtotal, totalPrice, totalDiscounts, clearCart } =
@@ -53,16 +62,24 @@ const Cart = () => {
         },
         products: {
           createMany: {
-            data: products.map(product => ({
+            data: products.map((product) => ({
               productId: product.id,
-              quantity: product.quantity
-            }))
-          }
-        }
+              quantity: product.quantity,
+            })),
+          },
+        },
       });
 
       clearCart();
-      setIsConfirmDialogOpen(true);
+      setIsOpen(false);
+
+      toast("Pedido finalizado com sucesso!", {
+        description: "Você pode acompanha-lo na tela dos seus pedidos.",
+        action: {
+          label: "Meus Pedidos",
+          onClick: () => router.push("/my-orders"),
+        },
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -113,17 +130,9 @@ const Cart = () => {
             </div>
             <Button
               className="mt-6 w-full"
-              onClick={handleFishOrderClick}
-              disabled={isSubmitLoading}
+              onClick={() => setIsConfirmDialogOpen(true)}
             >
-              {isSubmitLoading ? (
-                <>
-                  <Loader2 className="h4 mr-2 animate-spin" />
-                  Finalizando Pedido
-                </>
-              ) : (
-                <>Finalizar Pedido</>
-              )}
+              Finalizar pedido
             </Button>
           </>
         ) : (
@@ -136,13 +145,27 @@ const Cart = () => {
       >
         <AlertDialogContent className="w-[80vw] rounded-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>Pedido Efetuado!</AlertDialogTitle>
+            <AlertDialogTitle>Deseja finalizar seu pedido?</AlertDialogTitle>
             <AlertDialogDescription>
-              Seu pedido foi realizado com sucesso.
+              Ao finalizar seu pedido, você concorda com os termos e condições
+              da nossa plataforma.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction>Confirmar</AlertDialogAction>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleFishOrderClick}
+              disabled={isSubmitLoading}
+            >
+              {isSubmitLoading ? (
+                <>
+                  <Loader2 className="h4 mr-2 animate-spin" />
+                  Finalizando
+                </>
+              ) : (
+                <>Finalizar</>
+              )}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
